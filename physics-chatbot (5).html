@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>مساعد الفيزياء – مبادرة نورة المالكي</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#f1f5fb;--sur:#fff;--brd:#dce4f0;
+  --P:#5b21b6;--P2:#7c3aed;--P3:#ede9fe;--P4:#c4b5fd;
+  --B:#0369a1;--B2:#0ea5e9;--B3:#e0f2fe;--B4:#7dd3fc;
+  --G:#065f46;--G2:#059669;--G3:#d1fae5;--G4:#6ee7b7;
+  --O:#92400e;--O2:#d97706;--O3:#fef3c7;--O4:#fcd34d;
+  --R:#9d174d;--R2:#be123c;--R3:#fff1f2;--R4:#fda4af;
+  --T:#0f766e;--T3:#ccfbf1;--T4:#5eead4;
+  --tx:#1e293b;--mu:#64748b;--rad:15px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 55% 35% at 5% 5%,rgba(91,33,182,.06) 0%,transparent 65%),
+             radial-gradient(ellipse 45% 35% at 95% 95%,rgba(3,105,161,.06) 0%,transparent 65%)}
+.app{position:relative;z-index:1;display:flex;flex-direction:column;height:100vh;max-width:960px;margin:0 auto}
+
+/* ── HEADER ── */
+.hdr{padding:11px 18px;background:linear-gradient(130deg,#5b21b6 0%,#7c3aed 45%,#0369a1 100%);
+  display:flex;align-items:center;gap:12px;box-shadow:0 3px 16px rgba(91,33,182,.26)}
+.logo{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.18);
+  border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.ht{flex:1}.ht-m{font-size:1.06rem;font-weight:900;color:#fff}
+.ht-s{font-size:.7rem;color:rgba(255,255,255,.8);margin-top:1px}
+.badge{background:rgba(255,255,255,.2);color:#fff;padding:4px 11px;border-radius:18px;font-size:.67rem;font-weight:700;border:1px solid rgba(255,255,255,.27)}
+
+/* ── BOOK TABS ── */
+.bnav{background:var(--sur);border-bottom:2px solid var(--brd);display:flex;overflow-x:auto;scrollbar-width:none}
+.bnav::-webkit-scrollbar{display:none}
+.btab{padding:9px 17px;font-family:inherit;font-size:.79rem;font-weight:700;cursor:pointer;
+  border:none;background:transparent;color:var(--mu);border-bottom:3px solid transparent;
+  white-space:nowrap;transition:all .2s;margin-bottom:-2px}
+.btab.on,.btab:hover{color:var(--P);border-bottom-color:var(--P);background:var(--P3)}
+
+/* ── CHAPTERS BAR ── */
+.cbar{background:var(--sur);border-bottom:1px solid var(--brd);padding:7px 13px;
+  display:flex;gap:6px;flex-wrap:wrap;box-shadow:0 2px 5px rgba(0,0,0,.04)}
+.cbtn{padding:5px 12px;border-radius:18px;border:none;font-family:inherit;font-size:.74rem;font-weight:700;
+  cursor:pointer;white-space:nowrap;transition:all .18s;direction:rtl}
+.cp{background:var(--P3);color:var(--P);border:1.5px solid var(--P4)}
+.cb{background:var(--B3);color:var(--B);border:1.5px solid var(--B4)}
+.cg{background:var(--G3);color:var(--G);border:1.5px solid var(--G4)}
+.co{background:var(--O3);color:var(--O);border:1.5px solid var(--O4)}
+.cr{background:var(--R3);color:var(--R);border:1.5px solid var(--R4)}
+.ct{background:var(--T3);color:var(--T);border:1.5px solid var(--T4)}
+.cbtn:hover{transform:translateY(-2px);filter:brightness(.9);box-shadow:0 3px 9px rgba(0,0,0,.08)}
+
+/* ── CHAT ── */
+.chat{flex:1;overflow-y:auto;padding:15px 14px;display:flex;flex-direction:column;gap:13px;
+  background:var(--bg);scrollbar-width:thin;scrollbar-color:var(--brd) transparent}
+
+/* ── MESSAGES ── */
+.msg{display:flex;gap:8px;animation:mi .3s cubic-bezier(.34,1.4,.64,1) both}
+@keyframes mi{from{opacity:0;transform:translateY(13px) scale(.96)}to{opacity:1;transform:none}}
+.msg.u{flex-direction:row-reverse}
+.av{width:35px;height:35px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.msg.b .av{background:linear-gradient(135deg,#5b21b6,#0369a1)}
+.msg.u .av{background:linear-gradient(135deg,#92400e,#be123c)}
+.bub{max-width:83%;padding:11px 15px;border-radius:var(--rad);line-height:1.78;font-size:.9rem}
+.msg.b .bub{background:var(--sur);border:1.5px solid var(--brd);box-shadow:0 2px 8px rgba(91,33,182,.05);
+  border-radius:var(--rad) 3px var(--rad) var(--rad)}
+.msg.u .bub{background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#fff;
+  border-radius:3px var(--rad) var(--rad) var(--rad);box-shadow:0 4px 12px rgba(91,33,182,.25)}
+
+/* ── FORMULA ── */
+.fc{margin:8px 0;padding:11px 13px;background:linear-gradient(135deg,#f5f3ff,#e0f2fe);
+  border:1.5px solid var(--P4);border-radius:11px;direction:ltr;text-align:center}
+.fl{font-size:.69rem;color:var(--P);font-weight:800;margin-bottom:5px;text-align:right;direction:rtl}
+.katex{color:#1e293b!important;font-size:1.08em!important}.katex-display{margin:0!important}
+
+/* ── TAGS ── */
+.stag{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:17px;
+  font-size:.69rem;font-weight:800;margin-bottom:6px}
+.te{background:var(--P3);color:var(--P);border:1px solid var(--P4)}
+.tx{background:var(--G3);color:var(--G);border:1px solid var(--G4)}
+.th{background:var(--O3);color:var(--O);border:1px solid var(--O4)}
+.ts{background:var(--B3);color:var(--B);border:1px solid var(--B4)}
+.tt{background:var(--T3);color:var(--T);border:1px solid var(--T4)}
+
+/* ── INFO BOXES ── */
+.ib{margin:6px 0;padding:9px 12px;border-radius:9px;display:flex;gap:8px;align-items:flex-start;font-size:.88rem}
+.ip{background:var(--P3);border-right:3px solid var(--P)}
+.ib2{background:var(--B3);border-right:3px solid var(--B)}
+.ig{background:var(--G3);border-right:3px solid var(--G2)}
+.io{background:var(--O3);border-right:3px solid var(--O2)}
+.ir{background:var(--R3);border-right:3px solid var(--R2)}
+.it{background:var(--T3);border-right:3px solid var(--T)}
+.ii{font-size:.93rem;margin-top:1px;flex-shrink:0}
+
+/* ── STEPS ── */
+.stp{display:flex;align-items:flex-start;gap:8px;margin:5px 0;padding:7px 10px;
+  border-radius:9px;background:#f8f7ff;border-right:3px solid var(--P4);font-size:.88rem}
+.sn{min-width:22px;height:22px;border-radius:50%;background:var(--P);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0}
+
+/* ── TABLE ── */
+table{width:100%;border-collapse:collapse;margin:8px 0;font-size:.83rem;overflow:hidden;border-radius:9px}
+th{background:linear-gradient(90deg,var(--P),var(--P2));color:#fff;padding:7px 11px;text-align:right;font-weight:700}
+td{padding:6px 11px;border-bottom:1px solid #eef0fa;text-align:right}
+tr:nth-child(even) td{background:#faf9ff}tr:hover td{background:var(--P3)}
+
+/* ── TYPING ── */
+.typ{display:flex;gap:4px;padding:10px 13px;background:var(--sur);border:1.5px solid var(--brd);
+  border-radius:var(--rad) 3px var(--rad) var(--rad);width:fit-content}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--P4);animation:bo 1.3s infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes bo{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px);background:var(--P)}}
+
+/* ── INPUT ── */
+.ia{padding:11px 14px;background:var(--sur);border-top:1.5px solid var(--brd);box-shadow:0 -3px 12px rgba(0,0,0,.05)}
+.ir2{display:flex;gap:8px;align-items:flex-end}
+.iw{flex:1;position:relative}
+textarea{width:100%;padding:10px 14px;padding-left:42px;background:#f5f3ff;border:1.5px solid var(--brd);
+  border-radius:12px;color:var(--tx);font-family:inherit;font-size:.9rem;resize:none;
+  min-height:44px;max-height:115px;transition:border .2s,box-shadow .2s;direction:rtl}
+textarea:focus{outline:none;border-color:var(--P);box-shadow:0 0 0 3px rgba(91,33,182,.1);background:#fff}
+textarea::placeholder{color:#94a3b8}
+.mic{position:absolute;left:10px;bottom:9px;background:none;border:none;cursor:pointer;color:#94a3b8;font-size:.92rem}
+.mic:hover{color:var(--P)}
+.sbtn{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,var(--P),var(--B2));
+  border:none;cursor:pointer;color:#fff;font-size:1.05rem;flex-shrink:0;
+  box-shadow:0 4px 12px rgba(91,33,182,.28);transition:all .2s}
+.sbtn:hover{transform:scale(1.07) translateY(-2px);box-shadow:0 8px 17px rgba(91,33,182,.34)}
+.sbtn:active{transform:scale(.95)}
+.fn{text-align:center;font-size:.66rem;color:#94a3b8;margin-top:5px}
+.fn span{color:var(--P);font-weight:700}
+
+/* ── WELCOME ── */
+.wc{background:var(--sur);border:1.5px solid var(--brd);border-radius:17px;padding:21px;
+  text-align:center;box-shadow:0 4px 20px rgba(91,33,182,.07)}
+.we{font-size:2.5rem;margin-bottom:7px;display:block}
+.wt{font-size:1.14rem;font-weight:900;color:var(--P);margin-bottom:5px}
+.ws{font-size:.84rem;color:var(--mu);line-height:1.8;margin-bottom:13px}
+.qg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qi{padding:11px;border-radius:10px;cursor:pointer;border:1.5px solid var(--brd);
+  background:#faf9ff;transition:all .2s;text-align:right;font-size:.8rem}
+.qi:hover{border-color:var(--P);background:var(--P3);transform:translateY(-2px);box-shadow:0 4px 10px rgba(91,33,182,.09)}
+.qi-i{font-size:1.15rem;margin-bottom:2px;display:block}
+.qi strong{display:block;color:var(--tx);margin-bottom:1px}
+.qi span{font-size:.71rem;color:var(--mu)}
+
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--brd);border-radius:3px}
+@media(max-width:600px){.qg{grid-template-columns:1fr}.bub{max-width:93%}.cbar{gap:5px}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="logo">⚛️</div>
+  <div class="ht">
+    <div class="ht-m">مساعد الفيزياء الذكي 🔬</div>
+    <div class="ht-s">مبادرة نورة المالكي · مجمع السحن · المديرة هله النفيعي</div>
+  </div>
+  <div class="badge">● متصل</div>
+</header>
+
+<!-- BOOK TABS -->
+<div class="bnav" id="bnav">
+  <button class="btab on" onclick="sw(0,this)">📘 كتاب 1</button>
+  <button class="btab"    onclick="sw(1,this)">📗 كتاب 2</button>
+  <button class="btab"    onclick="sw(2,this)">📙 كتاب 3</button>
+  <button class="btab"    onclick="sw(3,this)">🧠 HOTS</button>
+  <button class="btab"    onclick="sw(4,this)">📋 ملخص</button>
+</div>
+
+<!-- CHAPTERS BAR -->
+<div class="cbar" id="cbar"></div>
+
+<!-- CHAT -->
+<div class="chat" id="chat">
+  <div class="msg b" id="wlc">
+    <div class="av">⚛️</div>
+    <div class="bub">
+      <div class="wc">
+        <span class="we">👩‍🔬</span>
+        <div class="wt">أهلاً بكِ في مساعد الفيزياء! ✨</div>
+        <div class="ws">
+          يسعدني مساعدتك في مادة الفيزياء 🌟<br>
+          <strong>شرح الفصول · حل تمارين الكتاب · مهارات التفكير العليا HOTS</strong><br>
+          <span style="color:#5b21b6;font-weight:700">مبادرة نورة المالكي · مجمع السحن</span>
+        </div>
+        <div class="qg">
+          <div class="qi" onclick="qa('اشرح قانون نيوتن الثاني بالتفصيل')">
+            <span class="qi-i">📖</span><strong>شرح المفاهيم</strong><span>قوانين ونظريات</span>
+          </div>
+          <div class="qi" onclick="qa('حل تمرين جسم كتلته 5 كغ تأثر بقوة 20 نيوتن أوجد تسارعه')">
+            <span class="qi-i">✏️</span><strong>حل تمارين</strong><span>خطوة بخطوة</span>
+          </div>
+          <div class="qi" onclick="qa('أسئلة مهارات تفكير عليا hots في الفيزياء')">
+            <span class="qi-i">🧠</span><strong>HOTS</strong><span>مهارات التفكير العليا</span>
+          </div>
+          <div class="qi" onclick="qa('اعطيني ملخص قوانين الفيزياء في جدول شامل')">
+            <span class="qi-i">📋</span><strong>ملخص القوانين</strong><span>جدول شامل</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INPUT -->
+<div class="ia">
+  <div class="ir2">
+    <div class="iw">
+      <textarea id="inp" placeholder="اكتبي سؤالك في الفيزياء هنا... 💬" rows="1"
+        onkeydown="hk(event)" oninput="ar(this)"></textarea>
+      <button class="mic">🎤</button>
+    </div>
+    <button class="sbtn" onclick="send()">➤</button>
+  </div>
+  <div class="fn">مبادرة <span>نورة المالكي</span> · مجمع السحن · المديرة <span>هله النفيعي</span></div>
+</div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   BOOKS & CHAPTERS  (from PDF files)
+═══════════════════════════════════════ */
+const BOOKS=[
+  { name:'📘 كتاب 1', chs:[
+    {l:'ف1 – مدخل إلى الفيزياء',    c:'cp', k:'intro'},
+    {l:'ف2 – تمثيل الحركة',          c:'cb', k:'represent'},
+    {l:'ف3 – الحركة المتسارعة',       c:'cg', k:'accel'},
+    {l:'ف4 – القوى في بعد واحد',     c:'co', k:'newton'},
+    {l:'ف5 – القوى في بعدين',        c:'cr', k:'forces2d'},
+    {l:'ف6 – الحركة في بعدين',       c:'ct', k:'motion2d'},
+  ]},
+  { name:'📗 كتاب 2', chs:[
+    {l:'ف1 – الجاذبية',              c:'cp', k:'gravity'},
+    {l:'ف2 – الحركة الدورانية',       c:'cb', k:'rotation'},
+    {l:'ف3 – الزخم وحفظه',           c:'cg', k:'momentum'},
+    {l:'ف4 – الشغل والآلات',          c:'co', k:'work'},
+    {l:'ف5 – الطاقة وحفظها',          c:'cr', k:'energy'},
+    {l:'ف6 – الطاقة الحرارية',         c:'ct', k:'heat'},
+  ]},
+  { name:'📙 كتاب 3', chs:[
+    {l:'ف1 – حالات المادة',           c:'cp', k:'matter'},
+    {l:'ف2 – الاهتزازات والموجات',    c:'cb', k:'waves'},
+    {l:'ف3 – الصوت',                  c:'cg', k:'sound'},
+    {l:'ف4 – أساسيات الضوء',          c:'co', k:'light'},
+    {l:'ف5 – الانعكاس والمرايا',       c:'cr', k:'mirrors'},
+    {l:'ف6 – الانكسار والعدسات',       c:'ct', k:'lenses'},
+    {l:'ف7 – التداخل والحيود',         c:'cp', k:'diffraction'},
+    {l:'ف8 – الكهرباء الساكنة',        c:'cb', k:'static'},
+    {l:'ف9 – المجالات الكهربائية',     c:'cg', k:'efield'},
+  ]},
+  { name:'🧠 HOTS', chs:[{l:'مهارات التفكير العليا', c:'co', k:'hots'}]},
+  { name:'📋 ملخص', chs:[{l:'ملخص القوانين',         c:'cb', k:'summary'}]},
+];
+
+/* ═══════════════════════════════════════
+   KNOWLEDGE BASE
+═══════════════════════════════════════ */
+const KB={
+
+/* ── كتاب 1 ── */
+intro:`<span class="stag te">📖 ف1 ك1 – مدخل إلى علم الفيزياء</span>
+<strong>الرياضيات والفيزياء · القياس</strong>
+<table>
+<tr><th>الكمية</th><th>الرمز</th><th>وحدة SI</th></tr>
+<tr><td>الطول</td><td>L</td><td>متر (m)</td></tr>
+<tr><td>الكتلة</td><td>m</td><td>كيلوغرام (kg)</td></tr>
+<tr><td>الزمن</td><td>t</td><td>ثانية (s)</td></tr>
+<tr><td>درجة الحرارة</td><td>T</td><td>كلفن (K)</td></tr>
+<tr><td>شدة التيار</td><td>I</td><td>أمبير (A)</td></tr>
+</table>
+<div class="fc"><div class="fl">التدوين العلمي</div>\\[1\\,\\text{km}=10^3\\,\\text{m}\\qquad 1\\,\\text{cm}=10^{-2}\\,\\text{m}\\]</div>
+<div class="ib io"><span class="ii">💡</span><div><strong>الدقة والضبط:</strong><br>الدقة = تقارب القياسات من بعضها<br>الضبط = تقارب القياس من القيمة الحقيقية</div></div>`,
+
+represent:`<span class="stag te">📖 ف2 ك1 – تمثيل الحركة</span>
+<strong>تصوير الحركة · الموقع والزمن · السرعة المتجهة</strong>
+<div class="fc"><div class="fl">الإزاحة</div>\\[\\Delta x=x_f-x_i\\]</div>
+<div class="fc"><div class="fl">متوسط السرعة المتجهة</div>\\[\\bar{v}=\\dfrac{\\Delta x}{\\Delta t}\\]</div>
+<div class="ib ib2"><span class="ii">📊</span><div><strong>منحنى (الموقع–الزمن):</strong><br>
+ميل موجب ← تحرك للأمام | ميل سالب ← تحرك للخلف | ميل = صفر ← ساكن<br>
+الميل = السرعة اللحظية</div></div>`,
+
+accel:`<span class="stag te">📖 ف3 ك1 – الحركة المتسارعة</span>
+<strong>التسارع (العجلة) · الحركة بتسارع ثابت · السقوط الحر</strong>
+<div class="fc"><div class="fl">التسارع</div>\\[a=\\dfrac{\\Delta v}{\\Delta t}=\\dfrac{v_f-v_i}{t}\\]</div>
+<table>
+<tr><th>المعادلة</th><th>الصيغة</th></tr>
+<tr><td>السرعة–الزمن</td><td>\\(v=v_i+at\\)</td></tr>
+<tr><td>الإزاحة–الزمن</td><td>\\(\\Delta x=v_i t+\\tfrac{1}{2}at^2\\)</td></tr>
+<tr><td>السرعة–الإزاحة</td><td>\\(v^2=v_i^2+2a\\Delta x\\)</td></tr>
+<tr><td>الإزاحة بالسرعتين</td><td>\\(\\Delta x=\\tfrac{v_i+v}{2}\\cdot t\\)</td></tr>
+</table>
+<div class="fc"><div class="fl">السقوط الحر</div>\\[g=9.8\\;\\text{m/s}^2\\;\\text{(دائماً نحو الأسفل)}\\]</div>
+<div class="ib ig"><span class="ii">💡</span><div>الكتلة لا تؤثر على تسارع السقوط الحر!</div></div>`,
+
+newton:`<span class="stag te">📖 ف4 ك1 – القوى في بعد واحد</span>
+<strong>القوة والحركة · استخدام قوانين نيوتن · قوى التأثير المتبادل</strong>
+<div class="ib ip"><span class="ii">1️⃣</span><div><strong>القانون الأول:</strong> الجسم يبقى في حالته ما لم تؤثر قوة محصلة خارجية.</div></div>
+<div class="fc"><div class="fl">القانون الثاني</div>\\[\\vec{F}_{\\text{net}}=m\\cdot\\vec{a}\\]</div>
+<div class="ib ib2"><span class="ii">3️⃣</span><div><strong>القانون الثالث:</strong> \\(F_{12}=-F_{21}\\) — فعل ورد فعل متساويان ومتعاكسان.</div></div>
+<div class="fc"><div class="fl">الوزن</div>\\[W=mg\\quad(g=9.8\\;\\text{m/s}^2)\\]</div>`,
+
+forces2d:`<span class="stag te">📖 ف5 ك1 – القوى في بعدين</span>
+<strong>المتجهات · الاحتكاك · القوة والحركة في بعدين</strong>
+<div class="fc"><div class="fl">مركبات المتجه</div>\\[F_x=F\\cos\\theta\\qquad F_y=F\\sin\\theta\\]</div>
+<div class="fc"><div class="fl">المحصلة</div>\\[R=\\sqrt{F_x^2+F_y^2}\\qquad\\theta=\\arctan\\!\\left(\\tfrac{F_y}{F_x}\\right)\\]</div>
+<div class="ib io"><span class="ii">🔧</span><div><strong>الاحتكاك:</strong><br>
+ساكن: \\(f_s\\leq\\mu_s N\\) | حركي: \\(f_k=\\mu_k N\\)<br>
+عادةً \\(\\mu_s>\\mu_k\\)</div></div>`,
+
+motion2d:`<span class="stag te">📖 ف6 ك1 – الحركة في بعدين</span>
+<strong>حركة المقذوف · الحركة الدائرية · السرعة النسبية</strong>
+<div class="ib ip"><span class="ii">🎯</span><div><strong>المقذوف:</strong> أفقياً لا تسارع | رأسياً تسارع = g</div></div>
+<div class="fc"><div class="fl">الأفقي</div>\\[x=v_i\\cos\\theta\\cdot t\\]</div>
+<div class="fc"><div class="fl">الرأسي</div>\\[y=v_i\\sin\\theta\\cdot t-\\tfrac{1}{2}gt^2\\]</div>
+<div class="fc"><div class="fl">التسارع المركزي</div>\\[a_c=\\dfrac{v^2}{r}\\qquad F_c=\\dfrac{mv^2}{r}\\]</div>`,
+
+/* ── كتاب 2 ── */
+gravity:`<span class="stag te">📖 ف1 ك2 – الجاذبية</span>
+<strong>حركة الكواكب والأقمار · قانون الجذب الكوني</strong>
+<div class="fc"><div class="fl">قانون الجذب الكوني</div>\\[F_g=G\\dfrac{m_1m_2}{r^2}\\]</div>
+<div class="ib ib2"><span class="ii">🔭</span><div>\\(G=6.674\\times10^{-11}\\;\\text{N·m}^2/\\text{kg}^2\\)</div></div>
+<div class="fc"><div class="fl">قانون كيبلر الثالث</div>\\[T^2=\\dfrac{4\\pi^2}{GM}r^3\\]</div>
+<div class="ib io"><span class="ii">🌍</span><div>الكتلة ثابتة في كل مكان | الوزن يتغير: \\(W=mg\\)</div></div>`,
+
+rotation:`<span class="stag te">📖 ف2 ك2 – الحركة الدورانية</span>
+<strong>الوصف الدوراني · ديناميكا الحركة الدورانية · الاتزان</strong>
+<div class="fc"><div class="fl">السرعة الزاوية</div>\\[\\omega=\\dfrac{\\Delta\\theta}{\\Delta t}\\quad(\\text{rad/s})\\]</div>
+<div class="fc"><div class="fl">العلاقة بين الخطية والزاوية</div>\\[v=r\\omega\\qquad a_c=r\\omega^2\\]</div>
+<div class="fc"><div class="fl">عزم الدوران</div>\\[\\tau=rF\\sin\\theta\\quad(\\text{N·m})\\]</div>
+<div class="ib ip"><span class="ii">⚖️</span><div><strong>شرط الاتزان:</strong> \\(\\sum F=0\\) و \\(\\sum\\tau=0\\)</div></div>`,
+
+momentum:`<span class="stag te">📖 ف3 ك2 – الزخم وحفظه</span>
+<strong>الدفع والزخم · حفظ الزخم</strong>
+<div class="fc"><div class="fl">الزخم الخطي</div>\\[\\vec{p}=m\\vec{v}\\quad(\\text{kg·m/s})\\]</div>
+<div class="fc"><div class="fl">نظرية الدفع–الزخم</div>\\[\\vec{J}=\\vec{F}\\,\\Delta t=\\Delta\\vec{p}\\]</div>
+<div class="fc"><div class="fl">قانون حفظ الزخم</div>\\[m_1v_{1i}+m_2v_{2i}=m_1v_{1f}+m_2v_{2f}\\]</div>
+<div class="ib ig"><span class="ii">💡</span><div>ينطبق على المنظومات المعزولة (القوة الخارجية المحصلة = صفر)</div></div>`,
+
+work:`<span class="stag te">📖 ف4 ك2 – الشغل والآلات البسيطة</span>
+<strong>الطاقة والشغل · الآلات البسيطة · القدرة</strong>
+<div class="fc"><div class="fl">الشغل</div>\\[W=Fd\\cos\\theta\\quad(\\text{J})\\]</div>
+<div class="fc"><div class="fl">مبرهنة الشغل–الطاقة</div>\\[W_{\\text{net}}=\\Delta E_k\\]</div>
+<div class="ib io"><span class="ii">🔩</span><div><strong>الآلات البسيطة:</strong><br>
+الميزة الميكانيكية: \\(\\text{MA}=F_{out}/F_{in}\\)<br>
+الكفاءة: \\(\\eta=W_{out}/W_{in}\\times100\\%\\)</div></div>`,
+
+energy:`<span class="stag te">📖 ف5 ك2 – الطاقة وحفظها</span>
+<strong>الأشكال المتعددة للطاقة · حفظ الطاقة</strong>
+<div class="fc"><div class="fl">الطاقة الحركية</div>\\[E_k=\\dfrac{1}{2}mv^2\\]</div>
+<div class="fc"><div class="fl">طاقة الوضع الثقالية</div>\\[E_p=mgh\\]</div>
+<div class="fc"><div class="fl">طاقة الوضع المرنة (هوك)</div>\\[E_s=\\dfrac{1}{2}kx^2\\]</div>
+<div class="fc"><div class="fl">قانون حفظ الطاقة الميكانيكية</div>\\[E_{k1}+E_{p1}=E_{k2}+E_{p2}\\]</div>
+<div class="fc"><div class="fl">القدرة</div>\\[P=\\dfrac{W}{t}=Fv\\quad(\\text{W})\\]</div>`,
+
+heat:`<span class="stag te">📖 ف6 ك2 – الطاقة الحرارية</span>
+<strong>درجة الحرارة والطاقة الحرارية · قوانين الديناميكا الحرارية</strong>
+<div class="fc"><div class="fl">تحويل الحرارة</div>\\[T_K=T_C+273\\]</div>
+<div class="fc"><div class="fl">الطاقة الحرارية المكتسبة/المفقودة</div>\\[Q=mc\\Delta T\\]</div>
+<div class="fc"><div class="fl">الحرارة الكامنة</div>\\[Q=mL\\]</div>
+<div class="ib io"><span class="ii">🌡️</span><div>c = الحرارة النوعية (J/kg·°C) | L = الحرارة الكامنة (J/kg)</div></div>`,
+
+/* ── كتاب 3 (كامل من الـ PDF الجديد) ── */
+matter:`<span class="stag tt">📖 ف1 ك3 – حالات المادة</span>
+<strong>خصائص الموائع · القوى داخل السوائل · الموائع الساكنة والمتحركة · المواد الصلبة</strong>
+<div class="fc"><div class="fl">الضغط</div>\\[P=\\dfrac{F}{A}\\quad(\\text{Pa}=\\text{N/m}^2)\\]</div>
+<div class="fc"><div class="fl">الضغط في السائل</div>\\[P=P_0+\\rho g h\\]</div>
+<div class="fc"><div class="fl">مبدأ أرخميدس – قوة الطفو</div>\\[F_B=\\rho_{\\text{سائل}}\\cdot g\\cdot V_{\\text{مغمور}}\\]</div>
+<div class="fc"><div class="fl">معادلة برنولي (الموائع المتحركة)</div>\\[P+\\tfrac{1}{2}\\rho v^2+\\rho gh=\\text{ثابت}\\]</div>
+<div class="fc"><div class="fl">إجهاد يونغ (المواد الصلبة)</div>\\[Y=\\dfrac{F/A}{\\Delta L/L_0}\\quad(\\text{Pa})\\]</div>
+<div class="ib ib2"><span class="ii">💧</span><div><strong>التوتر السطحي:</strong> القوة بين جزيئات سطح السائل تجعله يتصرف كغشاء مرن.</div></div>`,
+
+waves:`<span class="stag tt">📖 ف2 ك3 – الاهتزازات والموجات</span>
+<strong>الحركة الدورية · خصائص الموجات · سلوك الموجات</strong>
+<div class="fc"><div class="fl">الزمن الدوري والتردد</div>\\[T=\\dfrac{1}{f}\\quad(\\text{s})\\qquad f\\;(\\text{Hz})\\]</div>
+<div class="fc"><div class="fl">معادلة الموجة الأساسية</div>\\[v=f\\cdot\\lambda\\]</div>
+<div class="fc"><div class="fl">البندول البسيط</div>\\[T=2\\pi\\sqrt{\\dfrac{L}{g}}\\]</div>
+<div class="fc"><div class="fl">النابض (الزنبرك)</div>\\[T=2\\pi\\sqrt{\\dfrac{m}{k}}\\]</div>
+<table>
+<tr><th>الكمية</th><th>الرمز</th><th>الوحدة</th></tr>
+<tr><td>التردد</td><td>f</td><td>هرتز (Hz)</td></tr>
+<tr><td>الطول الموجي</td><td>λ</td><td>متر (m)</td></tr>
+<tr><td>السعة</td><td>A</td><td>متر (m)</td></tr>
+</table>
+<div class="ib ig"><span class="ii">🌊</span><div><strong>سلوك الموجات:</strong> انعكاس · انكسار · حيود · تداخل · امتصاص</div></div>`,
+
+sound:`<span class="stag tt">📖 ف3 ك3 – الصوت</span>
+<strong>خصائص الصوت والكشف عنه · الرنين في الأعمدة الهوائية والأوتار</strong>
+<div class="fc"><div class="fl">سرعة الصوت في الهواء (20°C)</div>\\[v_s\\approx343\\;\\text{m/s}\\]</div>
+<div class="fc"><div class="fl">شدة الصوت (ديسيبل)</div>\\[\\beta=10\\log\\!\\left(\\dfrac{I}{I_0}\\right)\\;(\\text{dB})\\]</div>
+<div class="fc"><div class="fl">رنين عمود هوائي مفتوح الطرفين</div>\\[f_n=\\dfrac{nv}{2L}\\quad n=1,2,3,\\ldots\\]</div>
+<div class="fc"><div class="fl">رنين عمود هوائي مغلق طرف</div>\\[f_n=\\dfrac{nv}{4L}\\quad n=1,3,5,\\ldots\\]</div>
+<div class="ib ib2"><span class="ii">🔊</span><div><strong>أثر دوبلر:</strong><br>
+\\(f'=f\\cdot\\dfrac{v\\pm v_d}{v\\mp v_s}\\)<br>
+الإشارة + عند التقارب، − عند التباعد</div></div>`,
+
+light:`<span class="stag tt">📖 ف4 ك3 – أساسيات الضوء</span>
+<strong>الاستضاءة · الطبيعة الموجية للضوء</strong>
+<div class="fc"><div class="fl">سرعة الضوء في الفراغ</div>\\[c=3\\times10^8\\;\\text{m/s}\\]</div>
+<div class="fc"><div class="fl">الاستضاءة (شدة الإضاءة)</div>\\[E=\\dfrac{P}{4\\pi r^2}\\quad(\\text{lux})\\]</div>
+<div class="fc"><div class="fl">طاقة الفوتون</div>\\[E=hf=\\dfrac{hc}{\\lambda}\\]</div>
+<div class="ib ip"><span class="ii">🌈</span><div>الضوء المرئي: طول موجي بين 400–700 نانومتر<br>
+البنفسجي (أقصر) ←→ الأحمر (أطول)</div></div>`,
+
+mirrors:`<span class="stag tt">📖 ف5 ك3 – الانعكاس والمرايا</span>
+<strong>الانعكاس عن المرايا المستوية · المرايا الكروية</strong>
+<div class="fc"><div class="fl">قانون الانعكاس</div>\\[\\theta_i=\\theta_r\\]</div>
+<div class="fc"><div class="fl">معادلة المرآة الكروية</div>\\[\\dfrac{1}{f}=\\dfrac{1}{d_o}+\\dfrac{1}{d_i}\\]</div>
+<div class="fc"><div class="fl">التكبير</div>\\[m=-\\dfrac{d_i}{d_o}=\\dfrac{h_i}{h_o}\\]</div>
+<div class="fc"><div class="fl">البعد البؤري</div>\\[f=\\dfrac{r}{2}\\quad(r=\\text{نصف القطر})\\]</div>
+<div class="ib io"><span class="ii">🪞</span><div>
+<strong>إشارات:</strong><br>
+d_i موجب ← صورة حقيقية مقلوبة<br>
+d_i سالب ← صورة وهمية معتدلة</div></div>`,
+
+lenses:`<span class="stag tt">📖 ف6 ك3 – الانكسار والعدسات</span>
+<strong>انكسار الضوء · العدسات المحدبة والمقعرة · تطبيقات العدسات</strong>
+<div class="fc"><div class="fl">قانون سنل (الانكسار)</div>\\[n_1\\sin\\theta_1=n_2\\sin\\theta_2\\]</div>
+<div class="fc"><div class="fl">معادل صانع العدسة (العدسة الرقيقة)</div>\\[\\dfrac{1}{f}=\\dfrac{1}{d_o}+\\dfrac{1}{d_i}\\]</div>
+<div class="fc"><div class="fl">التكبير</div>\\[m=-\\dfrac{d_i}{d_o}\\]</div>
+<div class="ib ib2"><span class="ii">🔍</span><div>
+<strong>معامل الانكسار:</strong> \\(n=c/v\\)<br>
+n(الهواء)≈1 | n(الزجاج)≈1.5 | n(الماء)≈1.33</div></div>`,
+
+diffraction:`<span class="stag tt">📖 ف7 ك3 – التداخل والحيود</span>
+<strong>تداخل الضوء · حيود الضوء</strong>
+<div class="fc"><div class="fl">تجربة يونغ – الهدبات الساطعة</div>\\[d\\sin\\theta=m\\lambda\\quad m=0,\\pm1,\\pm2,\\ldots\\]</div>
+<div class="fc"><div class="fl">موضع الهدبة الساطعة</div>\\[y_m=\\dfrac{m\\lambda L}{d}\\]</div>
+<div class="fc"><div class="fl">شرط التداخل الهدّام</div>\\[d\\sin\\theta=\\left(m+\\tfrac{1}{2}\\right)\\lambda\\]</div>
+<div class="ib ip"><span class="ii">🌊</span><div><strong>الحيود:</strong> انحراف الموجة حول العوائق والفتحات<br>
+الحيود يزداد كلما صغر الفتح مقارنةً بالطول الموجي</div></div>`,
+
+static:`<span class="stag tt">📖 ف8 ك3 – الكهرباء الساكنة</span>
+<strong>الشحنة الكهربائية · القوة الكهربائية</strong>
+<div class="fc"><div class="fl">قانون كولوم</div>\\[F=k\\dfrac{|q_1 q_2|}{r^2}\\quad k=9\\times10^9\\;\\text{N·m}^2/\\text{C}^2\\]</div>
+<div class="fc"><div class="fl">شحنة الإلكترون</div>\\[e=1.6\\times10^{-19}\\;\\text{C}\\]</div>
+<div class="ib ib2"><span class="ii">⚡</span><div><strong>خصائص الشحنة:</strong><br>
+الشحنات المتشابهة تتنافر | الشحنات المختلفة تتجاذب<br>
+الشحنة محفوظة (لا تُخلق ولا تُفنى)</div></div>`,
+
+efield:`<span class="stag tt">📖 ف9 ك3 – المجالات الكهربائية</span>
+<strong>توليد المجالات الكهربائية وقياسها · تطبيقاتها</strong>
+<div class="fc"><div class="fl">شدة المجال الكهربائي</div>\\[E=\\dfrac{F}{q}=k\\dfrac{Q}{r^2}\\quad(\\text{N/C})\\]</div>
+<div class="fc"><div class="fl">فرق الجهد الكهربائي</div>\\[V=\\dfrac{W}{q}=k\\dfrac{Q}{r}\\quad(\\text{V})\\]</div>
+<div class="fc"><div class="fl">طاقة المكثف</div>\\[U=\\dfrac{1}{2}CV^2\\]</div>
+<div class="ib io"><span class="ii">🔋</span><div><strong>المكثف:</strong> \\(C=\\varepsilon_0\\dfrac{A}{d}\\)<br>
+السعة C وحدتها فاراد (F)</div></div>`,
+
+/* ── HOTS ── */
+hots:`<span class="stag th">🧠 مهارات التفكير العليا – HOTS</span>
+<strong>تحليل · تقييم · تطبيق · تركيب</strong>
+
+<div class="ib ir"><span class="ii">🤔</span><div><strong>سؤال تحليل – طاقة:</strong><br>
+كرة تُرمى عمودياً للأعلى. ماذا يحدث لـ \\(E_k\\) و \\(E_p\\) أثناء صعودها؟</div></div>
+<div class="ib ip"><span class="ii">✅</span><div>\\(E_k\\downarrow\\) تتحول إلى \\(E_p\\uparrow\\) بنفس المقدار.<br>
+\\(E_{mec}=E_k+E_p=\\text{ثابت}\\) ← قانون حفظ الطاقة الميكانيكية</div></div>
+
+<div class="ib ir"><span class="ii">🤔</span><div><strong>سؤال تقييم – السقوط الحر:</strong><br>
+جسمان مختلفان في الكتلة يسقطان من ارتفاع واحد في الفراغ. أيهما يصل أولاً؟</div></div>
+<div class="ib ig"><span class="ii">✅</span><div>يصلان <strong>معاً!</strong><br>
+\\(g=9.8\\;\\text{m/s}^2\\) مستقل تماماً عن الكتلة (تجربة غاليليو)</div></div>
+
+<div class="ib ir"><span class="ii">🤔</span><div><strong>سؤال تطبيق – زخم:</strong><br>
+لماذا يشعر الملاكم بألم أقل عند ارتداء القفازات مقارنةً بالقتال باليد العارية؟</div></div>
+<div class="ib ib2"><span class="ii">✅</span><div>القفازات تزيد \\(\\Delta t\\) فتقل القوة المؤثرة:<br>
+\\(J=F\\Delta t=\\Delta p=\\text{ثابت}\\;<br>\\Rightarrow\\; F\\uparrow\\uparrow\\) عند تقليل \\(\\Delta t\\)</div></div>
+
+<div class="ib ir"><span class="ii">🤔</span><div><strong>سؤال تركيب – ضوء وصوت:</strong><br>
+لماذا نرى البرق قبل أن نسمع الرعد؟</div></div>
+<div class="ib io"><span class="ii">✅</span><div>سرعة الضوء \\(c=3\\times10^8\\;\\text{m/s}\\) أكبر بكثير من سرعة الصوت \\(v_s\\approx343\\;\\text{m/s}\\)<br>
+المسافة تقريباً = \\(\\Delta t \\times 343\\;\\text{م/ث}\\)</div></div>
+
+<div class="ib ir"><span class="ii">🤔</span><div><strong>سؤال تقييم – ضغط:</strong><br>
+لماذا المريض المستلقي في المستشفى يحتاج ضغط دم أقل لضخ الدم إلى الرأس مقارنةً بوقوفه؟</div></div>
+<div class="ib ig"><span class="ii">✅</span><div>عند الاستلقاء ينعدم فرق الارتفاع \\(\\Delta h=0\\)، فيقل الشغل اللازم: \\(P=P_0+\\rho g h\\)</div></div>`,
+
+/* ── SUMMARY ── */
+summary:`<span class="stag ts">📋 ملخص شامل – أهم قوانين الفيزياء</span>
+<table>
+<tr><th>القانون</th><th>المعادلة</th><th>الوحدة</th></tr>
+<tr><td>نيوتن الثاني</td><td>\\(F=ma\\)</td><td>N</td></tr>
+<tr><td>الوزن</td><td>\\(W=mg\\)</td><td>N</td></tr>
+<tr><td>السقوط الحر</td><td>\\(v^2=v_i^2+2gh\\)</td><td>m/s</td></tr>
+<tr><td>الطاقة الحركية</td><td>\\(E_k=\\frac{1}{2}mv^2\\)</td><td>J</td></tr>
+<tr><td>طاقة الوضع</td><td>\\(E_p=mgh\\)</td><td>J</td></tr>
+<tr><td>الشغل</td><td>\\(W=Fd\\cos\\theta\\)</td><td>J</td></tr>
+<tr><td>القدرة</td><td>\\(P=W/t\\)</td><td>W</td></tr>
+<tr><td>الزخم</td><td>\\(p=mv\\)</td><td>kg·m/s</td></tr>
+<tr><td>الجذب الكوني</td><td>\\(F=Gm_1m_2/r^2\\)</td><td>N</td></tr>
+<tr><td>ضغط السائل</td><td>\\(P=P_0+\\rho gh\\)</td><td>Pa</td></tr>
+<tr><td>أرخميدس</td><td>\\(F_B=\\rho gV\\)</td><td>N</td></tr>
+<tr><td>الطاقة الحرارية</td><td>\\(Q=mc\\Delta T\\)</td><td>J</td></tr>
+<tr><td>الموجة</td><td>\\(v=f\\lambda\\)</td><td>m/s</td></tr>
+<tr><td>قانون سنل</td><td>\\(n_1\\sin\\theta_1=n_2\\sin\\theta_2\\)</td><td>—</td></tr>
+<tr><td>المرآة/العدسة</td><td>\\(1/f=1/d_o+1/d_i\\)</td><td>m</td></tr>
+<tr><td>كولوم</td><td>\\(F=kq_1q_2/r^2\\)</td><td>N</td></tr>
+<tr><td>المجال الكهربائي</td><td>\\(E=F/q\\)</td><td>N/C</td></tr>
+<tr><td>يونغ (حيود)</td><td>\\(d\\sin\\theta=m\\lambda\\)</td><td>—</td></tr>
+<tr><td>الفوتون</td><td>\\(E=hf\\)</td><td>J</td></tr>
+<tr><td>عزم الدوران</td><td>\\(\\tau=rF\\sin\\theta\\)</td><td>N·m</td></tr>
+</table>`
+};
+
+/* ═══════════════════════════════════════
+   EXERCISE SOLVER
+═══════════════════════════════════════ */
+function solveEx(q){
+  const m=(q.match(/(\d+\.?\d*)\s*(كغ|kg)/i)||[])[1]||5;
+  const f=(q.match(/(\d+\.?\d*)\s*(نيوتن|N\b)/i)||[])[1]||20;
+  const a=(parseFloat(f)/parseFloat(m)).toFixed(2);
+  return `<span class="stag tx">✏️ حل تمرين – القانون الثاني لنيوتن</span>
+<div class="ib ib2"><span class="ii">📌</span><div><strong>المعطيات:</strong><br>
+الكتلة: \\(m=${m}\\;\\text{kg}\\)<br>
+القوة: \\(F=${f}\\;\\text{N}\\)<br>
+المطلوب: التسارع \\(a=?\\)</div></div>
+<div class="stp"><span class="sn">1</span><div>القانون:<div class="fc">\\[F=m\\cdot a\\]</div></div></div>
+<div class="stp"><span class="sn">2</span><div>العزل:<div class="fc">\\[a=\\dfrac{F}{m}\\]</div></div></div>
+<div class="stp"><span class="sn">3</span><div>التعويض:<div class="fc">\\[a=\\dfrac{${f}}{${m}}=${a}\\;\\text{m/s}^2\\]</div></div></div>
+<div class="ib ig"><span class="ii">✅</span><div><strong>الإجابة:</strong> \\(a=${a}\\;\\text{m/s}^2\\)</div></div>`;
+}
+
+/* ═══════════════════════════════════════
+   KEYWORD MAPPING
+═══════════════════════════════════════ */
+const KW=[
+  {k:['مدخل','قياس','رياضيات','وحدات','si','دولية'],t:'intro'},
+  {k:['تمثيل الحركة','تصوير','موقع والزمن','سرعة متجهة'],t:'represent'},
+  {k:['حركة متسارعة','تسارع','سقوط حر','معادلات الحركة'],t:'accel'},
+  {k:['نيوتن','قوة والحركة','قصور ذاتي','تأثير متبادل'],t:'newton'},
+  {k:['بعدين','متجهات','احتكاك','مستوى مائل'],t:'forces2d'},
+  {k:['حركة في بعدين','مقذوف','دائرية','نسبية'],t:'motion2d'},
+  {k:['جاذبية','جذب كوني','كواكب','كيبلر'],t:'gravity'},
+  {k:['دوران','دورانية','عزم دوران','اتزان','زاوية'],t:'rotation'},
+  {k:['زخم','دفع','حفظ الزخم','تصادم'],t:'momentum'},
+  {k:['شغل','آلات','ميزة ميكانيكية','كفاءة آلة'],t:'work'},
+  {k:['طاقة','حركية','وضعية','ميكانيكية','حفظ الطاقة','قدرة'],t:'energy'},
+  {k:['حرارة','درجة حرارة','حرارية','كلفن','حالة المادة كتاب'],t:'heat'},
+  {k:['حالات المادة','موائع','خصائص الموائع','ضغط سائل','أرخميدس','برنولي','توتر سطحي','المواد الصلبة','يونغ'],t:'matter'},
+  {k:['اهتزاز','موجات','حركة دورية','بندول','نابض','زنبرك','طول موجي','تردد'],t:'waves'},
+  {k:['صوت','دوبلر','رنين','أعمدة هوائية','أوتار','ديسيبل'],t:'sound'},
+  {k:['أساسيات الضوء','استضاءة','فوتون','ضوء مرئي','طيف ضوئي'],t:'light'},
+  {k:['انعكاس','مرايا','مرآة','مستوية','كروية'],t:'mirrors'},
+  {k:['انكسار','عدسة','عدسات','سنل','محدبة','مقعرة','معامل الانكسار'],t:'lenses'},
+  {k:['تداخل','حيود','يونغ','هدبات'],t:'diffraction'},
+  {k:['كهرباء ساكنة','شحنة كهربائية','شحنة','كولوم'],t:'static'},
+  {k:['مجال كهربائي','جهد كهربائي','مكثف','فرق جهد'],t:'efield'},
+  {k:['hots','مهارات تفكير','تفكير عليا','تحليل','تقييم'],t:'hots'},
+  {k:['ملخص','جدول قوانين','أهم القوانين','كل القوانين'],t:'summary'},
+];
+function getR(q){
+  const m=q.toLowerCase();
+  if((m.includes('كغ')||m.includes('kg'))&&(m.includes('نيوتن')||m.includes('قوة')||m.includes('تسارع')))
+    return solveEx(q);
+  for(const e of KW) if(e.k.some(w=>m.includes(w))) return KB[e.t]||fb();
+  return fb();
+}
+function fb(){return `<div class="ib ip"><span class="ii">🤖</span><div>يسعدني مساعدتك! ✨<br>
+استخدمي الأزرار أو اكتبي مثل:<br>
+<em>"اشرح حالات المادة"</em><br>
+<em>"اشرح انكسار الضوء والعدسات"</em><br>
+<em>"حل تمرين: جسم كتلته 4 كغ قوة 16 نيوتن"</em></div></div>`;}
+
+/* ═══════════════════════════════════════
+   BOOK / CHAPTER SWITCHING
+═══════════════════════════════════════ */
+let curBook=0;
+function sw(i,btn){
+  curBook=i;
+  document.querySelectorAll('.btab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderChs();
+}
+function renderChs(){
+  const bar=document.getElementById('cbar');bar.innerHTML='';
+  BOOKS[curBook].chs.forEach(ch=>{
+    const b=document.createElement('button');
+    b.className=`cbtn ${ch.c}`;b.textContent=ch.l;
+    b.onclick=()=>{
+      const w=document.getElementById('wlc');if(w)w.remove();
+      if(KB[ch.k]) addM(KB[ch.k],'b',true);
+      else addM(getR(ch.l),'b',true);
+    };
+    bar.appendChild(b);
+  });
+}
+renderChs();
+
+/* ═══════════════════════════════════════
+   CHAT ENGINE
+═══════════════════════════════════════ */
+let busy=false;
+function ar(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,115)+'px';}
+function hk(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
+function qa(t){document.getElementById('inp').value=t;send();}
+
+function send(){
+  const inp=document.getElementById('inp'),txt=inp.value.trim();
+  if(!txt||busy)return;
+  const w=document.getElementById('wlc');if(w)w.remove();
+  addM(txt,'u');inp.value='';inp.style.height='auto';
+  busy=true;
+  const tid=showT();
+  setTimeout(()=>{removeT(tid);addM(getR(txt),'b',true);busy=false;},580+Math.random()*380);
+}
+function addM(c,role,html=false){
+  const ca=document.getElementById('chat');
+  const d=document.createElement('div');d.className=`msg ${role}`;
+  const av=document.createElement('div');av.className='av';
+  av.textContent=role==='b'?'⚛️':'👩‍🎓';
+  const bu=document.createElement('div');bu.className='bub';
+  if(html)bu.innerHTML=c;else bu.textContent=c;
+  d.appendChild(av);d.appendChild(bu);ca.appendChild(d);
+  if(html&&typeof renderMathInElement==='function'){
+    renderMathInElement(bu,{
+      delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],
+      throwOnError:false
+    });
+  }
+  ca.scrollTop=ca.scrollHeight;
+}
+function showT(){
+  const ca=document.getElementById('chat'),id='t'+Date.now();
+  const d=document.createElement('div');d.className='msg b';d.id=id;
+  d.innerHTML=`<div class="av">⚛️</div><div class="typ"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+  ca.appendChild(d);ca.scrollTop=ca.scrollHeight;return id;
+}
+function removeT(id){const e=document.getElementById(id);if(e)e.remove();}
+</script>
+</body>
+</html>
